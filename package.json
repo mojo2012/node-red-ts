@@ -1,6 +1,6 @@
 {
   "name": "node-red-ts",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This is a typescript API for developing node-red packages",
   "scripts": {
     "clean": "rm -Rf ./dist/*",
@@ -8,8 +8,8 @@
     "watch": "npm run clean && concurrently -k npm:watch-*",
     "watch-ts": "concurrently \"tsc -w\" \"tsc-alias -w\"",
     "watch-html": "npx copy-and-watch --watch src/nodes/*.html dist/nodes",
-    "build": "tsc && tsc-alias && npm run copy:html && cp package.json dist/",
-    "copy:html": "(cd src; find ./nodes -name '*.html' | cpio -pdm ../dist)",
+    "build": "tsc && tsc-alias && npm run copy:resources",
+    "copy:resources": "(cd src; find ./nodes -name '*.html' | cpio -pdm ../dist) && cp package.json dist/ && cp README.md dist/",
     "launch": "node --env-file=.env --expose-gc --inspect=0.0.0.0:19229 node_modules/node-red/red.js --userDir ./data",
 	"debug": "concurrently -k \"npm run watch\" && \"node --env-file=.env --expose-gc --inspect=0.0.0.0:19229 node_modules/node-red/red.js --userDir ./data \"",
     "prepublish": "",
