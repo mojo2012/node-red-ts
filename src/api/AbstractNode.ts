@@ -4,7 +4,7 @@ import { ConsoleLogger, Logger } from "@redts/utils/Logger";
 import { Node, NodeAPI, NodeMessage, NodeStatus } from 'node-red';
 
 export abstract class AbstractNode<MESSAGE extends NodeMessage = NodeMessage, PROPERTIES = { [key: string]: unknown }> {
-	protected node!: Node<{}>;
+	protected node!: Node<Record<string, unknown>>;
 	protected config!: NodeDefinition;
 	protected logger!: Logger;
 
@@ -166,7 +166,7 @@ export abstract class AbstractNode<MESSAGE extends NodeMessage = NodeMessage, PR
 	public static createNode(RED: NodeAPI, nodeType: new (RED: NodeAPI) => AbstractNode<NodeMessage, unknown>) {
 		RED.nodes.registerType(
 			nodeType.name,
-			function (this: Node<{}>, config: NodeDefinition) {
+			function (this: Node<Record<string, unknown>>, config: NodeDefinition) {
 				const controller = new nodeType(RED);
 				controller.node = this;
 				controller.config = config;
