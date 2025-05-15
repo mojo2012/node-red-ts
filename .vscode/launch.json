@@ -1,0 +1,84 @@
+{
+	// Use IntelliSense to learn about possible attributes.
+	// Hover to view descriptions of existing attributes.
+	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "node",
+			"name": "Launch",
+			"request": "launch",
+			"cwd": "${workspaceFolder}",
+			"runtimeExecutable": "npm",
+			"runtimeArgs": [
+				"run",
+				"launch"
+			],
+			"preLaunchTask": "npm: build",
+			"attachSimplePort": 19229,
+			"internalConsoleOptions": "openOnSessionStart",
+			"autoAttachChildProcesses": true,
+			"pauseForSourceMap": true,
+			"sourceMaps": true,
+			"sourceMapPathOverrides": {
+				"file://nodes/*": "${workspaceFolder}/src/",
+			},
+			"resolveSourceMapLocations": [
+				"${workspaceFolder}/dist/**/*",
+				"!**/node_modules/**"
+			],
+			"localRoot": "${workspaceFolder}/dist/",
+			"remoteRoot": "/nodes",
+			"enableContentValidation": true,
+			"outputCapture": "console",
+			"console": "internalConsole",
+			"showAsyncStacks": true,
+			"smartStep": true,
+			"envFile": "${workspaceFolder}/.env",
+			"restart": true,
+			"presentation": {
+				"hidden": false,
+				"group": "node-red",
+				"order": 2
+			}
+		},
+		{
+			"type": "node",
+			"name": "Attach",
+			"request": "attach",
+			"address": "localhost",
+			"port": 19229,
+			"continueOnAttach": false,
+			"outputCapture": "console",
+			"internalConsoleOptions": "openOnSessionStart",
+			"sourceMaps": true,
+			"resolveSourceMapLocations": [
+				"${workspaceFolder}/dist/**/*",
+				"!**/node_modules/**"
+			],
+			"pauseForSourceMap": true,
+			"autoAttachChildProcesses": true,
+			"attachExistingChildren": true,
+			"enableContentValidation": true,
+			"localRoot": "${workspaceFolder}/dist/",
+			"remoteRoot": "/nodes/",
+			"showAsyncStacks": true,
+			"smartStep": true,
+			"trace": false,
+			"presentation": {
+				"hidden": false,
+				"group": "node-red",
+				"order": 2
+			}
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "vscode-jest-tests",
+			"skipFiles": [
+				"<node_internals>/**"
+			],
+			"program": "${workspaceFolder}/node_modules/jest/bin/jest"
+		},
+	]
+}

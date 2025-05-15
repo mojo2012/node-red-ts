@@ -1,0 +1,45 @@
+{
+  "name": "node-red-ts",
+  "version": "1.0.0",
+  "description": "This is a typescript API for developing node-red packages",
+  "scripts": {
+    "clean": "rm -Rf ./dist/*",
+    "test": "jest",
+    "watch": "npm run clean && concurrently -k npm:watch-*",
+    "watch-ts": "concurrently \"tsc -w\" \"tsc-alias -w\"",
+    "watch-html": "npx copy-and-watch --watch src/nodes/*.html dist/nodes",
+    "build": "tsc && tsc-alias && npm run copy:html && cp package.json dist/",
+    "copy:html": "(cd src; find ./nodes -name '*.html' | cpio -pdm ../dist)",
+    "launch": "node --env-file=.env --expose-gc --inspect=0.0.0.0:19229 node_modules/node-red/red.js --userDir ./data",
+	"debug": "concurrently -k \"npm run watch\" && \"node --env-file=.env --expose-gc --inspect=0.0.0.0:19229 node_modules/node-red/red.js --userDir ./data \"",
+    "prepublish": "",
+    "eslint:check": "eslint . --ext .ts",
+    "eslint:check:errors-only": "eslint . --ext .ts --quiet",
+    "eslint:fix": "eslint . --ext .ts --fix"
+  },
+  "keywords": [
+    "node-red",
+    "typescript"
+  ],
+  "files": [
+    "**/*"
+  ],
+  "node-red": {
+    "version": ">=3.1.0",
+    "nodes": {
+      "DummyNode": "nodes/DummyNode.js"
+    }
+  },
+  "author": "Matthias Fuchs",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@types/jest": "^26.0.24",
+    "@types/node": "^16.11.36",
+    "@types/node-red": "^1.1.0",
+    "@types/node-red__editor-client": "^1.1.0",
+    "@types/node-red-node-test-helper": "^0.2.0",
+    "concurrently": "^9.1.2",
+    "node-red": "^4.0.9",
+    "tsc-alias": "^1.8.16"
+  }
+}

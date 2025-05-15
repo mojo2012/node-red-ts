@@ -1,0 +1,15 @@
+dist
+.env
+node_modules
+*.tgz
+.npmrc
+data/context/*
+$*.xlsx
+/data/logs/*
+/data/nodes/*
+/data/*.backup
+/data/.config.nodes.json
+/nodes/*
+/dist/*
+package-lock.json
+data/**
