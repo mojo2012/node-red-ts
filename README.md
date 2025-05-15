@@ -1,5 +1,5 @@
 # node-red-ts
-
+## Introduction
 This project was born because I hate the overly complex and nested structure of the Node-RED API. I wanted something easy and clean and typescript-based.
 
 This is how a simply node looks like:
@@ -81,3 +81,17 @@ The project itself is runnable in node-red and fully debuggable in vscode (launc
 
 It looks like this:
 ![Debugging the dummy node in vscode.](public/debug.png)
+
+## API
+
+The `AbstractNode` has a bunch of methods that can be used or overriden in your node, for example:
+* `onInput`
+* `onClose`
+* `setProperty`/`getProperty`
+* `setStatus`
+* `context`
+* `flowContext`
+* `globalContext`
+
+The `onInput` method is triggered when a message arrives. It returns an array of messages (in the most cases just one). Each message in the array is passed to one output. The number of outputs has to be configured in the HTML file though.
+
