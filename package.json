@@ -12,7 +12,7 @@
     "copy:resources": "(cd src; find ./nodes -name '*.html' | cpio -pdm ../dist) && cp package.json dist/ && cp README.md dist/",
     "launch": "node --env-file=.env --expose-gc --inspect=0.0.0.0:19229 node_modules/node-red/red.js --userDir ./data",
 	"debug": "concurrently -k \"npm run watch\" && \"node --env-file=.env --expose-gc --inspect=0.0.0.0:19229 node_modules/node-red/red.js --userDir ./data \"",
-    "prepublish": "",
+    "deploy": "npm run build && (cd dist; npm publish)",
     "eslint:check": "eslint . --ext .ts",
     "eslint:check:errors-only": "eslint . --ext .ts --quiet",
     "eslint:fix": "eslint . --ext .ts --fix"
