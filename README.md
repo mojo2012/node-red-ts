@@ -80,7 +80,9 @@ The node files are in the "src/nodes" folder of this project.
 The project itself is runnable in node-red and fully debuggable in vscode (launch config and all is included).
 
 It looks like this:
-![Debugging the dummy node in vscode.](public/debug.png)
+![Debugging the dummy node in vscode.](https://github.com/mojo2012/node-red-ts/blob/main/public/debug.png?raw=true)
+
+A quick-starter template can be found here: https://github.com/mojo2012/node-red-ts-template. Just check it out and run it.
 
 ## API
 
