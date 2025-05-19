@@ -1,7 +1,17 @@
-import { NodeDefinition } from "@redts/api/NodeDefinition";
-import { NodePropertyType } from "@redts/api/NodePropertyType";
-import { ConsoleLogger, Logger } from "@redts/utils/Logger";
-import { Node, NodeAPI, NodeMessage, NodeStatus } from 'node-red';
+import { NodeDefinition } from '@redts/api/NodeDefinition';
+import { NodePropertyType } from '@redts/api/NodePropertyType';
+import {
+	ConsoleLogger,
+	Logger
+} from '@redts/utils/Logger';
+import {
+	Node,
+	NodeAPI,
+	NodeContext,
+	NodeContextData,
+	NodeMessage,
+	NodeStatus
+} from 'node-red';
 
 export abstract class AbstractNode<MESSAGE extends NodeMessage = NodeMessage, PROPERTIES = { [key: string]: unknown }> {
 	protected node!: Node<Record<string, unknown>>;
@@ -9,7 +19,6 @@ export abstract class AbstractNode<MESSAGE extends NodeMessage = NodeMessage, PR
 	protected logger!: Logger;
 
 	protected returnTopic?: string;
-	// protected properties: PROPERTIES = {} as PROPERTIES;
 
 	public constructor(protected RED: NodeAPI) {
 		//
@@ -18,7 +27,7 @@ export abstract class AbstractNode<MESSAGE extends NodeMessage = NodeMessage, PR
 	/**
 	 * Can be used to initialize properties from the NodeDef config.
 	 */
-	protected initProperties(RED: NodeAPI, config: NodeDefinition, msg?: MESSAGE) {
+	protected initProperties(RED: NodeAPI, config: NodeDefinition, msg?: MESSAGE): void {
 		this.logger = new ConsoleLogger(this.node);
 
 		// only use properties that don't end with "Type"
@@ -63,17 +72,13 @@ export abstract class AbstractNode<MESSAGE extends NodeMessage = NodeMessage, PR
 	/**
 	 * Clears the node status.
 	 */
-	protected clearStatus() {
+	protected clearStatus(): void {
 		this.node.status('');
 	}
 
-	// protected get properties(): PROPERTIES {
-	// 	return this.node.context() as PROPERTIES;
-	// }
-
-	// protected getProperty<T>(property: keyof PROPERTIES): T | undefined {
-	// 	return (this.properties as any)[property] as T | undefined;
-	// }
+	protected get properties(): Partial<PROPERTIES> {
+		return this.node.context() as PROPERTIES;
+	}
 
 	protected getProperty<T>(property: keyof PROPERTIES): T | undefined {
 		return this.node.context().get(property as string) as T;
@@ -83,14 +88,16 @@ export abstract class AbstractNode<MESSAGE extends NodeMessage = NodeMessage, PR
 		this.node.context().set(property as string, value);
 	}
 
-	// protected showNotification(message: string): void {
-	// 	console.log(message);
-	// }
-
 	/**
 	 * Sets the node status, allowing to set the fill mode and the shape.
 	 */
-	protected setStatus(status: NodeStatus = { fill: 'blue', shape: 'ring', text: '' }) {
+	protected setStatus(
+		status: NodeStatus = {
+			fill: 'blue',
+			shape: 'ring',
+			text: ''
+		}
+	): void {
 		this.node.status(status);
 
 		if (status?.text) {
@@ -117,16 +124,14 @@ export abstract class AbstractNode<MESSAGE extends NodeMessage = NodeMessage, PR
 		}
 	}
 
-	private async onCloseEvent(msg?: MESSAGE): Promise<void> {
+	private async onCloseEvent(removed: boolean, done: () => void): Promise<void> {
 		try {
-			const returnMessages = await this.onClose(msg);
-
-			if (returnMessages?.length) {
-				this.node.send(returnMessages);
-			}
+			await this.onClose(removed);
 		} catch (error) {
-			this.node.error(error, msg as NodeMessage);
+			this.node.error(error);
 		}
+
+		done();
 	}
 
 	/**
@@ -137,21 +142,30 @@ export abstract class AbstractNode<MESSAGE extends NodeMessage = NodeMessage, PR
 	}
 
 	/**
-	 * Can be overriden to react to onClose.
+	 * Can be overriden to react to nodes being removed or redeployed.
+	 *
+	 * @param removed is true if the node is removed, false in case of redeployment
 	 */
-	protected async onClose(msg?: MESSAGE): Promise<NodeMessage[]> {
-		return [];
+	protected async onClose(removed: boolean): Promise<void> {
+		//
 	}
 
-	protected get context() {
+	/**
+	 * Can be overriden to react to errors.
+	 */
+	protected async onError(error: unknown): Promise<void> {
+		//
+	}
+
+	protected get context(): NodeContext {
 		return this.node.context();
 	}
 
-	protected get globalContext() {
+	protected get globalContext(): NodeContextData {
 		return this.context.global;
 	}
 
-	protected get flowContext() {
+	protected get flowContext(): NodeContextData {
 		return this.context.flow;
 	}
 
@@ -159,14 +173,14 @@ export abstract class AbstractNode<MESSAGE extends NodeMessage = NodeMessage, PR
 		return this.logger;
 	}
 
-	protected setReturnTopic(topic: string) {
+	protected setReturnTopic(topic: string): void {
 		this.returnTopic = topic;
 	}
 
-	public static createNode(RED: NodeAPI, nodeType: new (RED: NodeAPI) => AbstractNode<NodeMessage, unknown>) {
+	public static createNode(RED: NodeAPI, nodeType: new (RED: NodeAPI) => AbstractNode<NodeMessage, unknown>): void {
 		RED.nodes.registerType(
 			nodeType.name,
-			function (this: Node<Record<string, unknown>>, config: NodeDefinition) {
+			function(this: Node<Record<string, unknown>>, config: NodeDefinition) {
 				const controller = new nodeType(RED);
 				controller.node = this;
 				controller.config = config;
@@ -176,7 +190,7 @@ export abstract class AbstractNode<MESSAGE extends NodeMessage = NodeMessage, PR
 				controller.initProperties.bind(controller).call(controller, RED, config as NodeDefinition);
 
 				this.on('input', controller.onInputEvent.bind(controller));
-				// this.on('close', controller.onClose.bind(controller));
+				this.on('close', controller.onCloseEvent.bind(controller));
 			},
 			{}
 		);
@@ -188,6 +202,7 @@ export abstract class AbstractNode<MESSAGE extends NodeMessage = NodeMessage, PR
 			payload: undefined,
 			topic: this.returnTopic
 		};
+
 		return [summaryMsg];
 	}
 
