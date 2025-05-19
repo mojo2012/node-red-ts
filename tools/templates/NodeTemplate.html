@@ -1,0 +1,32 @@
+<script type="text/javascript">
+  RED.nodes.registerType("__NODE_CLASS__", {
+    category: "__NODE_CATEGORY__",
+    color: "#1eb3fd",
+    icon: "font-awesome/fa-cogs",
+    defaults: {
+      name: { value: "" },
+    },
+    inputs: 1,
+    outputs: 1,
+    inputLabels: ["input"],
+    outputLabels: ["output"],
+    label: function () {
+      return this.name || "__NODE_NAME__";
+    },
+    paletteLabel: "__NODE_NAME__",
+    oneditprepare: () => { }
+  });
+</script>
+
+<!-- edit dialog -->
+<script type="text/html" data-template-name="__NODE_CLASS__">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+</script>
+
+<!-- help text -->
+<script type="text/html" data-help-name="__NODE_CLASS__">
+  <p>__NODE_NAME__ node.</p>
+</script>
