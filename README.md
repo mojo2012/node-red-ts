@@ -97,3 +97,12 @@ The `AbstractNode` has a bunch of methods that can be used or overriden in your 
 
 The `onInput` method is triggered when a message arrives. It returns an array of messages (in the most cases just one). Each message in the array is passed to one output. The number of outputs has to be configured in the HTML file though.
 
+## Usage
+Create new nodes using this command `node node_modules/node-red-ts/tools/create-node.js`. This command will create a new node (html and ts file) in the `src/nodes` folder and also register the node in the `package.json`.
+
+You can then build and launch node-red and start coding on your new node.
+
+## Future plans
+* Generate HTML based on a type-safe class
+* Add more convenience functionality to the `AbstractNode`
+

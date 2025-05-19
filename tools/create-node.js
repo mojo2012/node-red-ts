@@ -22,9 +22,15 @@ function askNext(i) {
 			askNext(i + 1);
 		});
 	} else {
+
+		const projectRoot = process.cwd();
+		const nodesDir = path.join(projectRoot, 'src', 'nodes');
+
+		fs.mkdirSync(nodesDir, { recursive: true });
+
 		const className = answers.inputName.replace(/[^a-zA-Z0-9]/g, '');
-		const destTs = path.join(__dirname, '../src/nodes', `${className}.ts`);
-		const destHtml = path.join(__dirname, '../src/nodes', `${className}.html`);
+		const destTs = path.join(nodesDir, `${className}.ts`);
+		const destHtml = path.join(nodesDir, `${className}.html`);
 
 		const tsTemplate = fs.readFileSync(path.join(__dirname, 'templates/NodeTemplate.ts'), 'utf-8')
 			.replace(/__NODE_CLASS__/g, className)
@@ -39,7 +45,8 @@ function askNext(i) {
 		fs.writeFileSync(destTs, tsTemplate);
 		fs.writeFileSync(destHtml, htmlTemplate);
 
-		const packageJsonPath = path.join(__dirname, '../package.json');
+		// register type in package.json
+		const packageJsonPath = path.join(projectRoot, 'package.json');
 		const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
 
 		if (!packageJson['node-red']) {
