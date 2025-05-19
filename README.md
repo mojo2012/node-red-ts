@@ -20,11 +20,10 @@ class DummyNode extends AbstractNode<NodeMessage> {
 		return [{ payload: "dummy test" }];
 	}
 
-	public override async onClose(msg?: NodeMessage): Promise<NodeMessage[]> {
-		console.debug("input");
+	public override async onClose(removed: boolean): Promise<void> {
+		console.debug('input');
 
-		this.status = "";
-		return [{ payload: "dummy test" }];
+		this.status = '';
 	}
 }
 
