@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
@@ -58,7 +59,7 @@ function askNext(i) {
 		packageJson['node-red'].nodes[className] = `nodes/${className}.js`;
 
 		fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
-		console.log(`✅ Registered node in package.json`);
+		console.log('✅ Registered node in package.json');
 
 		console.log(`✅ Node ${className} created in src/nodes`);
 		rl.close();
