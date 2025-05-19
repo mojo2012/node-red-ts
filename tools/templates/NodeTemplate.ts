@@ -12,11 +12,9 @@ class __NODE_CLASS__ extends AbstractNode<NodeMessage> {
 		return [{ payload: '__NODE_NAME__ test' }];
 	}
 
-	public override async onClose(msg?: NodeMessage): Promise<NodeMessage[]> {
+	public override async onClose(removed: boolean): Promise<void> {
 		console.debug('close');
 		this.status = '';
-		return [{ payload: '__NODE_NAME__ test' }];
-	}
 }
 
 module.exports = (RED: NodeAPI) => AbstractNode.createNode(RED, __NODE_CLASS__);

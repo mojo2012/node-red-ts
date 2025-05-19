@@ -1,6 +1,6 @@
 {
 	"name": "node-red-ts",
-	"version": "1.0.9",
+	"version": "1.0.10",
 	"description": "This is a typescript API for developing node-red packages",
 	"scripts": {
 		"clean": "rm -Rf ./dist/*",
